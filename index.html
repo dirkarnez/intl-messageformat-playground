@@ -14,39 +14,34 @@
 </head>
 <body>
     <div id="app"></div>
-    <script type="text/babel" src="./loaded-component.js"></script>
     <script type="text/babel">
+		// import IntlMessageFormat from 'intl-messageformat';
+	const customTranslation = "Hi {name}, you have {numProducts, plural, =0 {no items} one {1 item} other {# items}} in your cart.";
+		
       function Application() {
-        return (
-          <div>
-            Non-lazyloaded: <LoadedComponent/><br/>
-            Lazyloaded: <LazyLoadedComponent src={"./loaded-component.js"} />
-          </div>
-        )
+		  const [name, setName] = React.useState('Alex');
+		  const [numProducts, setNumProducts] = React.useState(3);
+		
+		  // useMemo ensures formatting runs only when dependencies change
+		  const formattedMessage = React.useMemo(() => {
+		    const formatter = new IntlMessageFormat(customTranslation, 'en');
+		    return formatter.format({ name, numProducts });
+		  }, [name, numProducts]); 
+		
+		  return (
+		    <div>
+		      <p>{formattedMessage}</p>
+		      <input value={name} onChange={(e) => setName(e.target.value)} />
+		      <input type="number" value={numProducts} onChange={(e) => setNumProducts(Number(e.target.value))} />
+		    </div>
+		  );
       }
-
-      function LazyLoadedComponent({src}) {
-        const [ code, setCode ] = React.useState("");
-
-        React.useEffect(() => {
-          fetch(src)
-          .then(a => a.text())
-          .then(a => {
-              const code = Babel.transform(`(() => ${a})()`, {
-                presets: ['es2015', 'react']
-              }).code;
-              setCode(code);
-          });
-        }, []);
-
-        return code && eval(code)();
-      }
-	    ReactDOM.createRoot(document.getElementById('app')).render(<Application/>);
+		ReactDOM.createRoot(document.getElementById('app')).render(<Application/>);
     </script>
-    <script src="https://unpkg.com/react@18.1.0/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react@latest/umd/react.development.js"></script>
     <!-- https://unpkg.com/react@18.2.0/umd/react.production.min.js -->
-    <script src="https://unpkg.com/react-dom@18.1.0/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/react-dom@latest/umd/react-dom.development.js"></script>
     <!-- https://unpkg.com/react-dom@18.2.0/umd/react-dom.production.min.js -->
-    <script src="https://unpkg.com/babel-standalone@6.26.0/babel.min.js"></script>
+    <script src="https://unpkg.com/babel-standalone@latest/babel.min.js"></script>
 </body>
 </html>
