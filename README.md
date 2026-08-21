@@ -1,6 +1,4 @@
-[minimal-react-development](https://dirkarnez.github.io/minimal-react-development)
-==================================================================================
+[intl-messageformat-playground](https://dirkarnez.github.io/intl-messageformat-playground)
+==========================================================================================
 Not for production
 
-### TODOs
-- [x] Lazy-loaded
